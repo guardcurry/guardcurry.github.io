@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}} – {{SITE_TITLE}}</title>
+<meta name="description" content="{{EXCERPT}}">
+<meta name="author" content="{{AUTHOR}}">
+<link rel="icon" href="{{ROOT}}assets/avatar.svg">
+<link rel="stylesheet" href="{{ROOT}}assets/style.css">
+</head>
+<body>
+{{NAVBAR}}
+
+<main class="container">
+  <div class="post-layout">
+    <article class="post">
+      <header class="post-header">
+        <h1 class="post-title">{{TITLE}}</h1>
+        <p class="post-subtitle">{{SUBTITLE}}</p>
+        <div class="tags">{{TAGS_HTML}}</div>
+        <div class="post-meta">
+          <span><span class="meta-label">作者</span>{{AUTHOR}}</span>
+          <span><span class="meta-label">日期</span>{{DISPLAY_DATE}}</span>
+          <span><span class="meta-label">阅读</span><span id="reading-time">—</span></span>
+        </div>
+      </header>
+
+      <div class="post-body">
+{{CONTENT}}
+      </div>
+
+      <footer class="post-footer">
+        <p class="dateline">{{DATELINE}}</p>
+        <div class="post-actions">
+          <a href="{{REPO}}/blob/main/blog/{{SLUG}}/index.md">查看源文件</a>
+          <a href="{{REPO}}/issues/new">报告问题</a>
+        </div>
+      </footer>
+    </article>
+
+    <aside class="sidebar">
+      <div class="sidebar-sticky">
+        <nav id="TOC" class="toc">
+          <h2>目录</h2>
+          <ul></ul>
+        </nav>
+        <div class="card">
+          <h2>文章信息</h2>
+          <ul class="info-list">
+            <li><span>作者</span><strong>{{AUTHOR}}</strong></li>
+            <li><span>日期</span><strong>{{DISPLAY_DATE}}</strong></li>
+            <li><span>标签</span><strong>{{TAG_COUNT}} 个</strong></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+{{FOOTER}}
+<script src="{{ROOT}}assets/main.js"></script>
+</body>
+</html>

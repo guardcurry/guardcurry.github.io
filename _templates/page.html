@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{PAGE_TITLE}} – {{SITE_TITLE}}</title>
+<meta name="description" content="{{PAGE_DESC}}">
+<meta name="author" content="{{AUTHOR}}">
+<link rel="icon" href="{{ROOT}}assets/avatar.svg">
+<link rel="stylesheet" href="{{ROOT}}assets/style.css">
+</head>
+<body>
+{{NAVBAR}}
+
+<main class="container">
+  <header class="page-header">
+    <h1>{{PAGE_TITLE}}</h1>
+    <p>{{PAGE_DESC}}</p>
+  </header>
+  <div class="prose">
+{{CONTENT}}
+  </div>
+</main>
+
+{{FOOTER}}
+<script src="{{ROOT}}assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{SITE_TITLE}}</title>
+<meta name="description" content="{{SITE_DESC}}">
+<meta name="author" content="{{AUTHOR}}">
+<link rel="icon" href="{{ROOT}}assets/avatar.svg">
+<link rel="stylesheet" href="{{ROOT}}assets/style.css">
+</head>
+<body>
+{{NAVBAR}}
+
+<main class="container">
+  <section class="hero">
+    <img src="{{ROOT}}assets/avatar.svg" alt="头像">
+    <div>
+      <h1>{{SITE_TITLE}}</h1>
+      <p>{{SITE_DESC}}</p>
+      <div class="hero-links">
+        <a href="{{ROOT}}blog/index.html">全部文章</a>
+        <a href="{{ROOT}}about/index.html">关于我</a>
+        <a href="{{REPO}}" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">最新文章</h2>
+  <ul class="post-list">
+{{POSTS_HTML}}
+  </ul>
+</main>
+
+{{FOOTER}}
+<script src="{{ROOT}}assets/main.js"></script>
+</body>
+</html>

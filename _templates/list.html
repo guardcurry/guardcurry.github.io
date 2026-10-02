@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>博客 – {{SITE_TITLE}}</title>
+<meta name="description" content="全部文章列表">
+<meta name="author" content="{{AUTHOR}}">
+<link rel="icon" href="{{ROOT}}assets/avatar.svg">
+<link rel="stylesheet" href="{{ROOT}}assets/style.css">
+</head>
+<body>
+{{NAVBAR}}
+
+<main class="container">
+  <header class="page-header">
+    <h1>博客</h1>
+    <p>共 {{POST_COUNT}} 篇文章，按时间倒序排列。</p>
+  </header>
+
+  <ul class="post-list">
+{{POSTS_HTML}}
+  </ul>
+</main>
+
+{{FOOTER}}
+<script src="{{ROOT}}assets/main.js"></script>
+</body>
+</html>
