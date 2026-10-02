@@ -140,6 +140,24 @@ function New-TagHtml($Tags) {
     return $sb.ToString()
 }
 
+function Get-CommentsHtml($g, [string]$Tpl) {
+    if ($null -eq $g) { return '' }
+    if (-not $g.enabled) { return '' }
+    if (-not $g.repo_id -or -not $g.category_id) { return '' }
+    $html = Apply-Tokens $Tpl @{
+        'G_REPO'           = $g.repo
+        'G_REPO_ID'        = $g.repo_id
+        'G_CATEGORY'       = $g.category
+        'G_CATEGORY_ID'    = $g.category_id
+        'G_MAPPING'        = $g.mapping
+        'G_REACTIONS'      = $g.reactions_enabled
+        'G_INPUT_POSITION' = $g.input_position
+        'G_THEME'          = $g.theme
+        'G_LANG'           = $g.lang
+    }
+    return $html.Trim()
+}
+
 function New-PostListHtml($Posts, [string]$RootPrefix) {
     $sb = New-Object System.Text.StringBuilder
     foreach ($p in $Posts) {
@@ -167,6 +185,11 @@ $postTpl = Read-Text (Join-Path $Root '_templates\post.html')
 $homeTpl = Read-Text (Join-Path $Root '_templates\home.html')
 $listTpl = Read-Text (Join-Path $Root '_templates\list.html')
 $pageTpl = Read-Text (Join-Path $Root '_templates\page.html')
+$commentsTpl = Read-Text (Join-Path $Root '_templates\_comments.html')
+
+# giscus comment config (optional file; comments only render when both IDs are set)
+$giscusPath = Join-Path $Root 'giscus.json'
+$giscus = if (Test-Path -LiteralPath $giscusPath) { (Read-Text $giscusPath) | ConvertFrom-Json } else { $null }
 
 $repo = ([string]$site.repo).TrimEnd('/')
 $siteUrl = ([string]$site.site_url).TrimEnd('/')
@@ -235,6 +258,7 @@ foreach ($p in $posts) {
         'DATELINE'     = Esc $p.Dateline
         'SLUG'         = $p.Slug
         'YEAR'         = $year
+        'COMMENTS'     = Get-CommentsHtml $giscus $commentsTpl
     }
     $out = Join-Path $Root ("blog\{0}\index.html" -f $p.Slug)
     Write-Text $out $html

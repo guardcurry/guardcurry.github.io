@@ -380,6 +380,29 @@ main { display: block; }
   font-size: 0.85rem;
 }
 
+/* ---------------------------------------------------------------- 评论区 */
+
+.comments {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.comments-title {
+  font-size: 1.15rem;
+  color: var(--heading-color);
+  margin: 0 0 0.5rem;
+}
+.comments-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 1.25rem;
+  line-height: 1.7;
+}
+.giscus { margin-top: 0.5rem; }
+.giscus,
+.giscus-frame { width: 100%; }
+.giscus-frame { border: none; }
+
 /* 小屏微调 */
 @media (max-width: 640px) {
   .post-title { font-size: 1.65rem; }

@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "repo": "guardcurry/guardcurry.github.io",
+  "repo_id": "R_kgDOU4un3A",
+  "category": "Announcements",
+  "category_id": "DIC_kwDOU4un3M4DG4eU",
+  "mapping": "pathname",
+  "reactions_enabled": "1",
+  "input_position": "bottom",
+  "theme": "light",
+  "lang": "zh-CN"
+}

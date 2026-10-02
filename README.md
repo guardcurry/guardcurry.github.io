@@ -3,6 +3,10 @@
 一个不依赖任何框架的中文个人博客：**Markdown 写文章 → PowerShell 生成 HTML → GitHub Pages 托管**。
 版式参考了 Quarto 博客模板（顶部头像导航、标题/副标题/标签、右侧目录、页脚引用与许可块）。
 
+**已上线：<https://guardcurry.github.io/>**
+
+> 🤖 **用 AI 助手接手本项目时，先读 [`AGENTS.md`](AGENTS.md)**：那是压缩版交接说明（关键坐标、构建命令、环境限制、已知坑、下一步），读完即可直接干活，不必通读本文件。
+
 ---
 
 ## 一、目录结构
@@ -158,3 +162,22 @@ git push -u origin main
 3. 执行 `quarto render`，把生成的 `_site/` 目录内容推到 GitHub Pages。
 
 两条路线产出的页面视觉效果接近，**本仓库的方案优点是零依赖、改完即传**，Quarto 的优点是可写代码、可交叉引用、可自动生成参考文献。
+
+---
+
+## 七、开启评论区（giscus，免费，基于 GitHub Discussions）
+
+代码侧已经做好（`giscus.json` + `_templates/_comments.html`），文章页会自动带上评论区；只剩**两步只能在网页上完成**的操作：
+
+1. **开启 Discussions**：仓库 → **Settings → General → Features** → 勾选 **Discussions**。（可顺手在 Discussions 里新建一个 `Comments` 分类，用默认的 `Announcements` 也可以。）
+2. **安装 giscus App**：打开 <https://github.com/apps/giscus> → **Install** → 选 `guardcurry` → **Only select repositories** 勾选 `guardcurry.github.io` → **Install**。
+
+拿到评论分类 ID（`category_id`）：
+
+- **最省事**：告诉 AI 助手「giscus 装好了」，它会自动探测并填好；
+- **自己来**：打开 <https://giscus.app>，`repository` 一栏填 `guardcurry/guardcurry.github.io`，页面下方会生成一段 `<script>`，把里面的 `data-category-id` 复制出来，填进 `giscus.json` 的 `"category_id": ""`。
+
+然后双击 `build.cmd`，把改动（`blog/2026-09-30-钥匙/index.html`、`giscus.json`、`_templates/_comments.html`、`assets/style.css`、`build.ps1`）上传到仓库，文章页底部就会出现评论区。
+
+> 说明：评论者需登录 GitHub 账号；评论以 Discussion 形式保存在你的仓库里，可随时在 GitHub 上管理或删除。
+> `category_id` 为空时评论区自动隐藏，不会报错。想换配色/语言，改 `giscus.json` 里的 `theme`、`lang` 后重新构建即可。
