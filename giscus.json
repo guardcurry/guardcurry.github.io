@@ -7,6 +7,6 @@
   "mapping": "pathname",
   "reactions_enabled": "1",
   "input_position": "bottom",
-  "theme": "light",
+  "theme": "dark",
   "lang": "zh-CN"
 }

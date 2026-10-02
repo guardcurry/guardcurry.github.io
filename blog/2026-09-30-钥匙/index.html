@@ -6,23 +6,23 @@
 <title>钥匙 – guardcurry blog</title>
 <meta name="description" content="从藏钥匙，到带钥匙；从带一把钥匙，到带一串钥匙。这中间隔着的，不只是从乡村到城市的距离，也是从少年到成年、从被人照顾到开始照顾自己的距离。">
 <meta name="author" content="徐奥">
-<link rel="icon" href="../../assets/avatar.svg">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
+<!-- 全局动态背景层（彩色光斑）：随导航 partial 一起注入到每个页面的 <body> 之后 -->
+<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+
 <header class="navbar">
-  <div class="navbar-inner">
+  <div class="navbar-shell">
     <a class="brand" href="../../index.html">
-      <img src="../../assets/avatar.svg" alt="站标">
       <span>guardcurry blog</span>
     </a>
     <nav class="nav-links">
       <a href="../../index.html">首页</a>
       <a class="active" href="../../blog/index.html">博客</a>
       <a href="../../about/index.html">关于</a>
-      <a class="nav-icon" href="https://github.com/guardcurry/guardcurry.github.io" target="_blank" rel="noopener" title="GitHub 仓库" aria-label="GitHub">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-      </a>
     </nav>
   </div>
 </header>
@@ -30,18 +30,18 @@
 <main class="container">
   <div class="post-layout">
     <article class="post">
-      <header class="post-header">
+      <header class="post-header reveal">
         <h1 class="post-title">钥匙</h1>
         <p class="post-subtitle">一篇关于钥匙、门与回家的散文</p>
         <div class="tags"><span class="tag">散文</span><span class="tag">故乡</span><span class="tag">亲情</span><span class="tag">成长</span><span class="tag">回望</span></div>
-        <div class="post-meta">
+        <div class="post-meta glass">
           <span><span class="meta-label">作者</span>徐奥</span>
           <span><span class="meta-label">日期</span>2026 年 9 月 30 日</span>
           <span><span class="meta-label">阅读</span><span id="reading-time">—</span></span>
         </div>
       </header>
 
-      <div class="post-body">
+      <div class="post-body glass reveal" data-delay="80">
 <p>我小时候，身上是从不带钥匙的。</p>
 <p>幼时住在乡下，上的是家隔壁的幼儿园，名叫水乡幼儿园。所谓幼儿园，不过是在一间能住人的空房里，摆着一排低矮的座椅，几十个村里的孩子挤在一起。那时候不用很早起床，爷爷奶奶总能在出门前把我送过去，有时干脆一人牵着一只手，把我送到教室门口。那时候的日子慢，家离幼儿园近，人和人也近。</p>
 <p>稍大一些，我去村里的小学读书。家门是两扇刷着红漆的木门，漆面已经有些斑驳，门栓松松地横着，门缝里恰好能容下一个瘦小的孩子。门外挂着一把黑色的锁，比我的手心还大，沉甸甸的。</p>
@@ -151,16 +151,11 @@
 <p>也不需要钥匙。</p>
 <p>只要我想起它，它就一直在那里。</p>
 <p>等我回去。</p>
+        <footer class="post-footer">
+          <p class="dateline">2026 年 9 月 30 日，于国庆假期前有感</p>
+        </footer>
       </div>
-
-      <footer class="post-footer">
-        <p class="dateline">2026 年 9 月 30 日，于国庆假期前有感</p>
-        <div class="post-actions">
-          <a href="https://github.com/guardcurry/guardcurry.github.io/blob/main/blog/2026-09-30-钥匙/index.md">查看源文件</a>
-          <a href="https://github.com/guardcurry/guardcurry.github.io/issues/new">报告问题</a>
-        </div>
-      </footer>
-<section class="comments" id="comments">
+<section class="comments glass reveal" id="comments">
   <h2 class="comments-title">评论</h2>
   <p class="comments-hint">评论由 GitHub Discussions 提供，需要登录 GitHub 账号；你的评论会保存在本仓库的 Discussions 里，不会丢失。</p>
   <div class="giscus"></div>
@@ -174,7 +169,7 @@
           data-reactions-enabled="1"
           data-emit-metadata="0"
           data-input-position="bottom"
-          data-theme="light"
+          data-theme="dark"
           data-lang="zh-CN"
           data-loading="lazy"
           crossorigin="anonymous"
@@ -185,11 +180,11 @@
 
     <aside class="sidebar">
       <div class="sidebar-sticky">
-        <nav id="TOC" class="toc">
+        <nav id="TOC" class="toc glass reveal" data-delay="140">
           <h2>目录</h2>
           <ul></ul>
         </nav>
-        <div class="card">
+        <div class="card glass reveal" data-delay="200">
           <h2>文章信息</h2>
           <ul class="info-list">
             <li><span>作者</span><strong>徐奥</strong></li>
@@ -202,8 +197,8 @@
   </div>
 </main>
 
-<footer class="site-footer">
-  <div class="container footer-grid">
+<footer class="site-footer glass reveal">
+  <div class="footer-grid">
     <div>
       <h2>引用与许可</h2>
       <p>除特别说明外，本站文字采用 <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a> 许可协议，转载请注明作者与出处。</p>
@@ -226,14 +221,9 @@
         <a href="../../blog/index.html">博客</a> ·
         <a href="../../about/index.html">关于</a>
       </p>
-      <div class="social">
-        <a href="https://github.com/guardcurry/guardcurry.github.io" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub">
-          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-        </a>
-      </div>
     </div>
   </div>
-  <div class="container footer-bottom">
+  <div class="footer-bottom">
     <span>guardcurry blog</span> · 由 <span>build.ps1</span> 从 Markdown 生成
   </div>
 </footer>

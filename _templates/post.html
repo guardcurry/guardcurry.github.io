@@ -6,7 +6,8 @@
 <title>{{TITLE}} – {{SITE_TITLE}}</title>
 <meta name="description" content="{{EXCERPT}}">
 <meta name="author" content="{{AUTHOR}}">
-<link rel="icon" href="{{ROOT}}assets/avatar.svg">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="{{ROOT}}assets/style.css">
 </head>
 <body>
@@ -15,38 +16,33 @@
 <main class="container">
   <div class="post-layout">
     <article class="post">
-      <header class="post-header">
+      <header class="post-header reveal">
         <h1 class="post-title">{{TITLE}}</h1>
         <p class="post-subtitle">{{SUBTITLE}}</p>
         <div class="tags">{{TAGS_HTML}}</div>
-        <div class="post-meta">
+        <div class="post-meta glass">
           <span><span class="meta-label">作者</span>{{AUTHOR}}</span>
           <span><span class="meta-label">日期</span>{{DISPLAY_DATE}}</span>
           <span><span class="meta-label">阅读</span><span id="reading-time">—</span></span>
         </div>
       </header>
 
-      <div class="post-body">
+      <div class="post-body glass reveal" data-delay="80">
 {{CONTENT}}
+        <footer class="post-footer">
+          <p class="dateline">{{DATELINE}}</p>
+        </footer>
       </div>
-
-      <footer class="post-footer">
-        <p class="dateline">{{DATELINE}}</p>
-        <div class="post-actions">
-          <a href="{{REPO}}/blob/main/blog/{{SLUG}}/index.md">查看源文件</a>
-          <a href="{{REPO}}/issues/new">报告问题</a>
-        </div>
-      </footer>
 {{COMMENTS}}
     </article>
 
     <aside class="sidebar">
       <div class="sidebar-sticky">
-        <nav id="TOC" class="toc">
+        <nav id="TOC" class="toc glass reveal" data-delay="140">
           <h2>目录</h2>
           <ul></ul>
         </nav>
-        <div class="card">
+        <div class="card glass reveal" data-delay="200">
           <h2>文章信息</h2>
           <ul class="info-list">
             <li><span>作者</span><strong>{{AUTHOR}}</strong></li>

@@ -30,10 +30,10 @@
 site.json                    站名、作者、邮箱、仓库地址、站点 URL
 blog/<日期-标题>/index.md    一篇文章 = 一个文件夹（文件夹名即网址）
 about/index.md               关于页
-assets/style.css             全站样式（配色/字号/行距，顶部 CSS 变量集中控制）
-assets/main.js               字数统计 + 自动目录 + 滚动高亮
-assets/avatar.svg            站标/头像
-_templates/*.html            页面模板、导航/页脚/评论 partial
+assets/style.css             Apple 风格设计系统（液态玻璃/深浅色/动效，见第 11 节）
+assets/main.js               字数统计 + 自动目录 + 导航滚动状态 + 入场动画
+assets/avatar.svg            已弃用（旧「钥匙」站标；页面与 favicon 都已不再引用，可安全删除）
+_templates/*.html            页面模板、导航/页脚/评论 partial（含全局动态背景层）
 giscus.json                  评论区配置（见第 10 节）
 build.ps1 / build.cmd        构建脚本（build.cmd 是双击入口）
 ```
@@ -175,3 +175,33 @@ web_fetch https://giscus.app/api/discussions/categories?repo=guardcurry/guardcur
 web_fetch https://raw.githubusercontent.com/guardcurry/guardcurry.github.io/main/blog/2026-09-30-%E9%92%A5%E5%8C%99/index.html
 # 搜 data-category-id 是否等于 DIC_kwDOU4un3M4DG4eU
 ```
+
+> ⚠️ 上面第 10 节里写「`theme` 当前为 `light`、本站无暗色模式」**已过时**：全站重做后已支持深浅色，`giscus.json` 的 `theme` 现为 `preferred_color_scheme`（跟随系统，与站点一致）。
+
+## 11. UI 设计系统（壁纸站风格 / 深色图库，参考 haowallpaper.com）
+
+**风格**：**全站固定深色**（`:root` 里 `color-scheme: dark`，已删除 `prefers-color-scheme` 双主题）——深色底 + 氛围光斑 + 图库网格 + 圆角卡片 + 悬停微缩放，模仿 haowallpaper.com「哲风壁纸」。
+
+**关键实现（全在 `assets/style.css`）**：
+- 设计变量集中在 `:root`（单一暗色主题）→ **改配色/圆角/阴影只动这一块**。
+- 氛围背景：`.mesh span` 四个彩色光斑 + `@keyframes meshFloat` 缓慢漂移。**`.mesh` 标记写在 `_templates/_navbar.html` 顶部**（随导航 partial 注入每个页面 `<body>` 之后），不要在页面模板里重复添加。
+- 导航栏：`.navbar` 是**全宽模糊条**（`backdrop-filter` + 下边框），`.navbar-shell` 只是内层限宽 flex 行；滚动超过 12px 时 `main.js` 给 `.navbar` 加 `.is-scrolled` 加深底色。**胶囊悬浮导航已不存在。**
+- 文章卡片 = 图库 tile，由 `build.ps1` 的 `New-PostListHtml` 输出：
+  `<li class="tile reveal" style="--h:200">` → `.tile-link` → `.tile-thumb`（内含 `.tile-glyph` 标题首字）+ `.tile-body`（`.tile-date` / `.tile-title` / `.tile-excerpt` / `.tags`）。
+  `--h` = 每张卡的 HSL 色相（`(200 + i*47) % 360`），渐变封面靠它上色。**`.post-card` / `.card-date` / `.card-excerpt` / `.list-date` / `.glass` 均已废弃，别再引用。**
+- 网格：`.post-list` = `repeat(auto-fill, minmax(340px, 1fr))`，桌面多列、手机单列。
+- 入场动画：元素加 `class="reveal"`（可加 `data-delay`），由 `main.js` 的 IntersectionObserver 加 `.in`。
+- 跨页面转场：`@view-transition { navigation: auto }` + `.navbar { view-transition-name: navbar }`（Chrome/Edge 126+，其余自动降级）。
+- giscus 主题为 `dark`（`giscus.json`），与固定深色站点一致。
+- **点击爆表情特效**：`main.js` 第 5 段监听 `pointerdown`（只响应 `e.button === 0`，即左键/单指），在点击坐标生成 5～8 个 emoji 粒子；粒子样式 `.pop-emoji` 定义在 `style.css`（`position: fixed` + `pointer-events: none`），动画用 Web Animations API（飞散 + 旋转 + 淡出），`onfinish` 自动 `remove()`。emoji 清单是 `POP_GLYPHS` 数组（用 `\uXXXX` 转义，避免文件编码风险）；同时存活粒子 >140 个时停止生成；`prefers-reduced-motion` 下整段不注册。注意：因为用的是 `pointerdown`，拖动滚动条或选文字也会触发；想只在真正 click 时触发就把 `pointerdown` 改成 `click`。
+
+**主页封面（只在首页出现，文章页永不显示）**：
+- 图片放 `assets/cover.jpg`（也支持 `.jpeg/.png/.webp`）→ `build.ps1` 自动探测并注入 `index.html` 的 `<figure class="hero-cover" style="background-image:url(...)">`；**文件不存在时整块不输出**，不会出现破图。
+- 占位符是 `{{COVER_BLOCK}}`，只存在于 `_templates/home.html`；文章页/列表页/关于页都没有它。
+- `main.js` 第 4 段给封面加滚动视差（`prefers-reduced-motion` 下自动关闭）。
+- 换封面：替换 `assets\cover.jpg` → 重跑构建 → 上传 `assets` + `index.html`。
+- 当前封面：1123×657 JPEG，约 105 KB（由用户提供的壁纸压缩而来）；CSS 高度 `clamp(230px, 44vw, 500px)`、`background-position: center 30%`（保住书法与主体，裁掉底部人群）。
+
+**字体**：SF Pro 字族优先，中文回落 PingFang SC / 微软雅黑；Windows 上渲染为 Segoe UI（不内嵌字体以保持零依赖）。
+**保留的必需覆盖**：`.post-body .dateline { text-indent: 0 }`（否则落款继承段落首行缩进）。
+**浏览器要求**：`color-mix(in srgb, ...)` 需 Chrome 111+ / Safari 16.2+；`backdrop-filter` 需 Chrome 76+。

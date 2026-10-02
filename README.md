@@ -148,7 +148,7 @@ git push -u origin main
 | 页面没样式 | `assets/` 文件夹没上传，或上传时层级被压平，保持原有目录结构 |
 | 提示“无法加载脚本，因为未数字签名” | 用 `build.cmd`（内部已带 `-ExecutionPolicy Bypass`），或执行 `powershell -ExecutionPolicy Bypass -File .\build.ps1` |
 | 右侧目录不显示 | 文章里没有 `## 小标题`，属于正常（无标题时目录自动隐藏） |
-| 想换成自己的头像 | 用同名文件替换 `assets/avatar.svg`，或改成 `.png` 后同步修改 `_templates` 里的三处 `avatar.svg` |
+| 想给导航栏加图标 | 目前导航栏只有站名文字、页面无 favicon。要加图标：在 `_templates/_navbar.html` 的 `.brand` 里插入 `<img>`，并在 4 个页面模板的 `<head>` 加回 `<link rel="icon" href="{{ROOT}}assets/你的图标.svg">` |
 | 想换配色/字体 | 只改 `assets/style.css` 顶部的 CSS 变量即可 |
 
 ---

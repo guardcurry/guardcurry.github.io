@@ -160,17 +160,28 @@ function Get-CommentsHtml($g, [string]$Tpl) {
 
 function New-PostListHtml($Posts, [string]$RootPrefix) {
     $sb = New-Object System.Text.StringBuilder
+    $i = 0
     foreach ($p in $Posts) {
-        [void]$sb.AppendLine('    <li>')
-        [void]$sb.AppendLine('      <div class="list-date">' + (Esc $p.DisplayDate) + '</div>')
-        [void]$sb.AppendLine('      <h2><a href="' + $RootPrefix + 'blog/' + $p.Slug + '/index.html">' + (Esc $p.Title) + '</a></h2>')
+        $hue = (200 + ($i * 47)) % 360
+        $glyph = '.'
+        if ($p.Title.Length -gt 0) { $glyph = $p.Title.Substring(0, 1) }
+        $url = $RootPrefix + 'blog/' + $p.Slug + '/index.html'
+        [void]$sb.AppendLine('    <li class="tile reveal" style="--h:' + $hue + '">')
+        [void]$sb.AppendLine('      <a class="tile-link" href="' + $url + '">')
+        [void]$sb.AppendLine('        <span class="tile-thumb"><span class="tile-glyph">' + (Esc $glyph) + '</span></span>')
+        [void]$sb.AppendLine('        <span class="tile-body">')
+        [void]$sb.AppendLine('          <span class="tile-date">' + (Esc $p.DisplayDate) + '</span>')
+        [void]$sb.AppendLine('          <span class="tile-title">' + (Esc $p.Title) + '</span>')
         if ($p.Excerpt) {
-            [void]$sb.AppendLine('      <p>' + (Esc $p.Excerpt) + '</p>')
+            [void]$sb.AppendLine('          <span class="tile-excerpt">' + (Esc $p.Excerpt) + '</span>')
         }
         if ($p.Tags.Count -gt 0) {
-            [void]$sb.AppendLine('      <div class="tags">' + (New-TagHtml $p.Tags) + '</div>')
+            [void]$sb.AppendLine('          <span class="tags">' + (New-TagHtml $p.Tags) + '</span>')
         }
+        [void]$sb.AppendLine('        </span>')
+        [void]$sb.AppendLine('      </a>')
         [void]$sb.AppendLine('    </li>')
+        $i++
     }
     return $sb.ToString().TrimEnd()
 }
@@ -265,6 +276,24 @@ foreach ($p in $posts) {
     Write-Host ("  post   -> blog/{0}/index.html" -f $p.Slug)
 }
 
+# --- home hero cover (optional file) ---------------------------------
+# Drop a file at assets\cover.jpg (or .jpeg/.png/.webp) and rebuild:
+# it becomes the home page header cover. Article pages never show it.
+$coverPath = ''
+foreach ($ext in @('jpg', 'jpeg', 'png', 'webp')) {
+    if (Test-Path -LiteralPath (Join-Path $Root ("assets\cover.{0}" -f $ext))) {
+        $coverPath = "assets/cover.$ext"
+        break
+    }
+}
+$coverBlock = ''
+if ($coverPath) {
+    $coverBlock = '  <figure class="hero-cover" style="background-image:url(''' + $coverPath + ''')" role="img" aria-label="cover"></figure>'
+    Write-Host ('  cover  -> ' + $coverPath)
+} else {
+    Write-Host '  cover  -> none (drop assets\cover.jpg to enable)'
+}
+
 # --- home page -------------------------------------------------------
 $chrome = Get-Chrome '' 'home' ''
 $homeHtml = Apply-Tokens $homeTpl @{
@@ -276,6 +305,7 @@ $homeHtml = Apply-Tokens $homeTpl @{
     'AUTHOR'      = $site.author
     'REPO'        = $repo
     'YEAR'        = $year
+    'COVER_BLOCK' = $coverBlock
     'POSTS_HTML'  = New-PostListHtml $posts ''
 }
 Write-Text (Join-Path $Root 'index.html') $homeHtml
