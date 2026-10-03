@@ -2,8 +2,10 @@
    guardcurry blog · 交互脚本
    1. 中文字数 / 阅读时长
    2. 自动目录 + 滚动高亮
-   3. 导航栏滚动状态（玻璃加深）
-   4. 滚动入场动画（IntersectionObserver，尊重 prefers-reduced-motion）
+   3. 侧边栏滚动状态
+   4. 首页封面轻微视差
+   5. 点击爆出可爱表情（不干扰链接/按钮点击）
+   6. 滚动入场动画（含兜底，避免内容"隐身"）
    ========================================================================= */
 (function () {
   "use strict";
@@ -58,14 +60,12 @@
     }
   }
 
-  /* ---------- 3. 导航栏滚动状态 ---------- */
-  var nav = document.querySelector(".navbar");
-  if (nav) {
-    var syncNav = function () {
-      nav.classList.toggle("is-scrolled", window.scrollY > 12);
-    };
-    window.addEventListener("scroll", syncNav, { passive: true });
-    syncNav();
+  /* ---------- 3. 侧边栏滚动状态 ---------- */
+  var side = document.querySelector(".sidebar");
+  if (side) {
+    var syncSide = function () { side.classList.toggle("is-scrolled", window.scrollY > 8); };
+    window.addEventListener("scroll", syncSide, { passive: true });
+    syncSide();
   }
 
   /* ---------- 4. 首页封面轻微视差 ---------- */
@@ -96,10 +96,12 @@
     "\uD83C\uDF53",   /* 草莓 */
     "\uD83D\uDC30",   /* 兔子 */
     "\uD83E\uDDF8",   /* 玩偶 */
-    "\u2601\uFE0F"    /* 云 */
+    "\uD83D\uDC36"    /* 小狗 */
   ];
 
-  if (!reduceMotion) {
+  var canAnimate = !!(window.Element && Element.prototype && typeof Element.prototype.animate === "function");
+
+  if (!reduceMotion && canAnimate) {
     var spawnPop = function (x, y) {
       /* 防止连点造成粒子堆积 */
       if (document.getElementsByClassName("pop-emoji").length > 140) { return; }
@@ -136,6 +138,9 @@
 
     document.addEventListener("pointerdown", function (e) {
       if (e.button !== 0) { return; }   /* 只响应左键 / 单指触摸 */
+      var t = e.target;
+      /* 点在链接、按钮、输入框上时不喷表情：保证手机上点文章一定能跳转 */
+      if (t && t.closest && t.closest("a, button, input, textarea, select, label")) { return; }
       spawnPop(e.clientX, e.clientY);
     }, { passive: true });
   }
@@ -154,6 +159,8 @@
     window.setTimeout(function () { el.classList.add("in"); }, delay);
   };
 
+  /* threshold 必须是 0：手机上的长正文可高达上万像素，
+     用比例阈值（如 0.05）永远达不到，会导致整页内容"隐身" */
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (entry) {
       if (entry.isIntersecting) {
@@ -161,13 +168,22 @@
         io.unobserve(entry.target);
       }
     });
-  }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+  }, { rootMargin: "0px 0px -4% 0px", threshold: 0 });
 
   items.forEach(function (el, i) {
-    /* 未显式指定延迟时按顺序轻微错峰，观感接近苹果页面的逐条浮现 */
     if (!el.hasAttribute("data-delay")) {
       el.setAttribute("data-delay", String(Math.min(i * 70, 420)));
     }
     io.observe(el);
   });
+
+  /* 兜底：观察器万一没触发，2 秒后把视口附近的元素直接显示 */
+  window.setTimeout(function () {
+    items.forEach(function (el) {
+      if (el.classList.contains("in")) { return; }
+      if (el.getBoundingClientRect().top < window.innerHeight * 1.3) {
+        el.classList.add("in");
+      }
+    });
+  }, 2000);
 })();

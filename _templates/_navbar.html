@@ -1,15 +1,20 @@
-<!-- 全局动态背景层（彩色光斑）：随导航 partial 一起注入到每个页面的 <body> 之后 -->
-<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<script>document.documentElement.classList.add("js");</script>
 
-<header class="navbar">
-  <div class="navbar-shell">
-    <a class="brand" href="{{ROOT}}index.html">
-      <span>{{SITE_TITLE}}</span>
-    </a>
-    <nav class="nav-links">
-      <a{{ACTIVE_HOME}} href="{{ROOT}}index.html">首页</a>
-      <a{{ACTIVE_BLOG}} href="{{ROOT}}blog/index.html">博客</a>
-      <a{{ACTIVE_ABOUT}} href="{{ROOT}}about/index.html">关于</a>
-    </nav>
+<aside class="sidebar">
+  <a class="brand" href="{{ROOT}}index.html">{{SITE_TITLE}}</a>
+
+  <nav class="nav">
+    <a class="nav-item{{ACTIVE_HOME}}" href="{{ROOT}}index.html">首页</a>
+    <a class="nav-item{{ACTIVE_BLOG}}" href="{{ROOT}}blog/index.html">博客</a>
+{{NAV_CATEGORIES}}
+    <a class="nav-item{{ACTIVE_ABOUT}}" href="{{ROOT}}about/index.html">关于</a>
+  </nav>
+
+  <a class="sidebar-cta" href="{{ROOT}}blog/index.html">浏览全部文章</a>
+
+  <div class="sidebar-foot">
+    <p class="sidebar-title">关于本站</p>
+    <p>{{SITE_DESC}}</p>
+    <p class="sidebar-copy">© {{YEAR}} {{AUTHOR}}</p>
   </div>
-</header>
+</aside>

@@ -6,41 +6,46 @@
 <title>钥匙 – guardcurry blog</title>
 <meta name="description" content="从藏钥匙，到带钥匙；从带一把钥匙，到带一串钥匙。这中间隔着的，不只是从乡村到城市的距离，也是从少年到成年、从被人照顾到开始照顾自己的距离。">
 <meta name="author" content="徐奥">
-<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#000000">
 <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-<!-- 全局动态背景层（彩色光斑）：随导航 partial 一起注入到每个页面的 <body> 之后 -->
-<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<script>document.documentElement.classList.add("js");</script>
 
-<header class="navbar">
-  <div class="navbar-shell">
-    <a class="brand" href="../../index.html">
-      <span>guardcurry blog</span>
-    </a>
-    <nav class="nav-links">
-      <a href="../../index.html">首页</a>
-      <a class="active" href="../../blog/index.html">博客</a>
-      <a href="../../about/index.html">关于</a>
-    </nav>
+<aside class="sidebar">
+  <a class="brand" href="../../index.html">guardcurry blog</a>
+
+  <nav class="nav">
+    <a class="nav-item" href="../../index.html">首页</a>
+    <a class="nav-item active" href="../../blog/index.html">博客</a>
+    <a class="nav-item" href="../../category/儿童作文/index.html">儿童作文</a>
+    <a class="nav-item" href="../../about/index.html">关于</a>
+  </nav>
+
+  <a class="sidebar-cta" href="../../blog/index.html">浏览全部文章</a>
+
+  <div class="sidebar-foot">
+    <p class="sidebar-title">关于本站</p>
+    <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
+    <p class="sidebar-copy">© 2026 徐奥</p>
   </div>
-</header>
+</aside>
 
 <main class="container">
   <div class="post-layout">
     <article class="post">
       <header class="post-header reveal">
+        
         <h1 class="post-title">钥匙</h1>
         <p class="post-subtitle">一篇关于钥匙、门与回家的散文</p>
-        <div class="tags"><span class="tag">散文</span><span class="tag">故乡</span><span class="tag">亲情</span><span class="tag">成长</span><span class="tag">回望</span></div>
-        <div class="post-meta glass">
+        <div class="post-meta">
           <span><span class="meta-label">作者</span>徐奥</span>
           <span><span class="meta-label">日期</span>2026 年 9 月 30 日</span>
           <span><span class="meta-label">阅读</span><span id="reading-time">—</span></span>
         </div>
+        <div class="tags"><span class="tag">散文</span><span class="tag">故乡</span><span class="tag">亲情</span><span class="tag">成长</span><span class="tag">回望</span></div>
       </header>
-
+      
       <div class="post-body glass reveal" data-delay="80">
 <p>我小时候，身上是从不带钥匙的。</p>
 <p>幼时住在乡下，上的是家隔壁的幼儿园，名叫水乡幼儿园。所谓幼儿园，不过是在一间能住人的空房里，摆着一排低矮的座椅，几十个村里的孩子挤在一起。那时候不用很早起床，爷爷奶奶总能在出门前把我送过去，有时干脆一人牵着一只手，把我送到教室门口。那时候的日子慢，家离幼儿园近，人和人也近。</p>
@@ -178,8 +183,8 @@
 </section>
     </article>
 
-    <aside class="sidebar">
-      <div class="sidebar-sticky">
+    <aside class="post-aside">
+      <div class="aside-sticky">
         <nav id="TOC" class="toc glass reveal" data-delay="140">
           <h2>目录</h2>
           <ul></ul>

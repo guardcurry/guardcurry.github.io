@@ -11,21 +11,26 @@
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-<!-- 全局动态背景层（彩色光斑）：随导航 partial 一起注入到每个页面的 <body> 之后 -->
-<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<script>document.documentElement.classList.add("js");</script>
 
-<header class="navbar">
-  <div class="navbar-shell">
-    <a class="brand" href="../index.html">
-      <span>guardcurry blog</span>
-    </a>
-    <nav class="nav-links">
-      <a href="../index.html">首页</a>
-      <a href="../blog/index.html">博客</a>
-      <a class="active" href="../about/index.html">关于</a>
-    </nav>
+<aside class="sidebar">
+  <a class="brand" href="../index.html">guardcurry blog</a>
+
+  <nav class="nav">
+    <a class="nav-item" href="../index.html">首页</a>
+    <a class="nav-item" href="../blog/index.html">博客</a>
+    <a class="nav-item" href="../category/儿童作文/index.html">儿童作文</a>
+    <a class="nav-item active" href="../about/index.html">关于</a>
+  </nav>
+
+  <a class="sidebar-cta" href="../blog/index.html">浏览全部文章</a>
+
+  <div class="sidebar-foot">
+    <p class="sidebar-title">关于本站</p>
+    <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
+    <p class="sidebar-copy">© 2026 徐奥</p>
   </div>
-</header>
+</aside>
 
 <main class="container">
   <header class="page-header glass reveal">

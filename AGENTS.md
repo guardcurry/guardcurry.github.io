@@ -205,3 +205,26 @@ web_fetch https://raw.githubusercontent.com/guardcurry/guardcurry.github.io/main
 **字体**：SF Pro 字族优先，中文回落 PingFang SC / 微软雅黑；Windows 上渲染为 Segoe UI（不内嵌字体以保持零依赖）。
 **保留的必需覆盖**：`.post-body .dateline { text-indent: 0 }`（否则落款继承段落首行缩进）。
 **浏览器要求**：`color-mix(in srgb, ...)` 需 Chrome 111+ / Safari 16.2+；`backdrop-filter` 需 Chrome 76+。
+
+## 12. 更新：Spotify 风格 + 分类栏目（最新状态，**优先于第 11 节**）
+
+**风格改为 Spotify 网页风**（第 11 节里 `.mesh` 光斑、悬浮导航、`.tile` 亮色渐变的描述已过时，以本节为准）：
+- 配色：`--bg:#000` / `--panel:#121212` / `--card:#181818` / `--card-hover:#282828` / `--text:#fff` / `--muted:#b3b3b3` / 品牌绿 `--accent:#1db954`、`--accent-hover:#1ed760`。**改主题只动 `:root`。**
+- 布局：**左侧固定侧边栏 `.sidebar`**（桌面 `position:fixed` + `body{padding-left:232px}`；≤900px 自动变成顶部 sticky 横向条）。结构在 `_templates/_navbar.html`：`.brand` → `.nav > .nav-item(.active)` → `.sidebar-cta`（绿色按钮）→ `.sidebar-foot`。
+- **`.glass` 现在就是"面板"**（`background:var(--panel)` + 1px 边框 + 8px 圆角）：所有页面模板仍在使用它，别删。
+- 卡片：`.tile`（hover 变 `#282828` 并上浮）+ `.tile-thumb`（按 `--h` 色相的**暗色**渐变）+ `.tile-glyph` + **`.play-btn`（Spotify 标志性绿色圆形播放按钮，hover 浮现）**。
+- 文章页右栏从 `.sidebar` 改名为 **`.post-aside` / `.aside-sticky`**（避免与全局 `.sidebar` 撞名）。
+- 旧的 `.mesh` 光斑标记、`.navbar` / `.navbar-shell` 结构**已删除**；`main.js` 的滚动状态改为监听 `.sidebar`。
+
+**分类栏目（新功能，自动推导）**：
+- 文章 front matter 写 `category: 儿童作文` → `build.ps1` 自动做四件事：① 侧边栏加一个 `.nav-item` 入口；② 生成 `category\<分类名>\index.html` 列表页（模板 `_templates/category.html`）；③ 卡片上加 `.cat-pill`；④ 文章页标题上方加 `.cat-pill` 链接。
+- 分类**从文章里推导**（`Select-Object -Unique`），无需在 `site.json` 登记；新增分类只需在新文章里写 `category: xxx` 再构建。
+- 两个新的可选 front matter 字段：**`glyph:`**（卡片封面字，默认取标题首字）和 **`author_bio:`**（作者介绍，渲染成 `.author-card` 头像卡）。当前《小狗"年年"》用 `glyph: 🐶` + 「五年级学生，站主的妹妹，喜欢卡皮巴拉。」
+- 目前文章：《钥匙》（徐奥，2026-09-30）与《小狗"年年"》（徐汝婷，2026-10-03，分类「儿童作文」）。URL 形如 `category/儿童作文/index.html`（中文目录名，GitHub Pages 正常支持）。
+
+**本轮修掉的三个真 bug（重要）**：
+1. `.reveal` 改为 **`html.js .reveal`**（`_navbar.html` 顶部内联脚本加 `js` 类）→ **没有 JS 时内容不再"隐身"**。
+2. `IntersectionObserver` 的 `threshold` 由 `0.05` 改为 **`0`** 并加 2 秒兜底：手机上的长正文高达上万像素，比例阈值永远达不到，会让**整篇文章显示为空白**——这就是「手机上点文章进不去」的真正原因。
+3. 点击爆表情改为**在链接/按钮/输入框上不触发**（`closest("a, button, input, textarea, select, label")`），保证手机上点文章一定能跳转。
+
+**构建输出现在是**：`post ×N` → `cover`（可选）→ `page index.html` → `page blog/index.html` → `cat category/<名>/index.html` → `page about/index.html`。

@@ -10,21 +10,26 @@
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<!-- 全局动态背景层（彩色光斑）：随导航 partial 一起注入到每个页面的 <body> 之后 -->
-<div class="mesh" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+<script>document.documentElement.classList.add("js");</script>
 
-<header class="navbar">
-  <div class="navbar-shell">
-    <a class="brand" href="index.html">
-      <span>guardcurry blog</span>
-    </a>
-    <nav class="nav-links">
-      <a class="active" href="index.html">首页</a>
-      <a href="blog/index.html">博客</a>
-      <a href="about/index.html">关于</a>
-    </nav>
+<aside class="sidebar">
+  <a class="brand" href="index.html">guardcurry blog</a>
+
+  <nav class="nav">
+    <a class="nav-item active" href="index.html">首页</a>
+    <a class="nav-item" href="blog/index.html">博客</a>
+    <a class="nav-item" href="category/儿童作文/index.html">儿童作文</a>
+    <a class="nav-item" href="about/index.html">关于</a>
+  </nav>
+
+  <a class="sidebar-cta" href="blog/index.html">浏览全部文章</a>
+
+  <div class="sidebar-foot">
+    <p class="sidebar-title">关于本站</p>
+    <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
+    <p class="sidebar-copy">© 2026 徐奥</p>
   </div>
-</header>
+</aside>
 
 <main class="container">
   <figure class="hero-cover" style="background-image:url('assets/cover.jpg')" role="img" aria-label="cover"></figure>
@@ -40,12 +45,24 @@
   <h2 class="section-title">最新文章</h2>
   <ul class="post-list">
     <li class="tile reveal" style="--h:200">
-      <a class="tile-link" href="blog/2026-09-30-钥匙/index.html">
-        <span class="tile-thumb"><span class="tile-glyph">钥</span></span>
+      <a class="tile-link" href="blog/2026-10-03-小狗年年/index.html">
+        <span class="tile-thumb"><span class="tile-glyph">🐶</span><span class="play-btn" aria-hidden="true">&#9654;</span></span>
         <span class="tile-body">
-          <span class="tile-date">2026 年 9 月 30 日</span>
+          <span class="cat-pill">儿童作文</span>
+          <span class="tile-title">小狗“年年”</span>
+          <span class="tile-excerpt">每个人都有自己的心爱之物，像琦君笔下飘香的桂花，冯骥才笔下灵动的珍珠鸟，我也有我的心爱之物——一只调皮可爱的小狗。</span>
+          <span class="tile-date">2026 年 10 月 3 日</span>
+          <span class="tags"><span class="tag">儿童作文</span><span class="tag">我的心爱之物</span><span class="tag">小狗</span></span>
+        </span>
+      </a>
+    </li>
+    <li class="tile reveal" style="--h:247">
+      <a class="tile-link" href="blog/2026-09-30-钥匙/index.html">
+        <span class="tile-thumb"><span class="tile-glyph">钥</span><span class="play-btn" aria-hidden="true">&#9654;</span></span>
+        <span class="tile-body">
           <span class="tile-title">钥匙</span>
           <span class="tile-excerpt">从藏钥匙，到带钥匙；从带一把钥匙，到带一串钥匙。这中间隔着的，不只是从乡村到城市的距离，也是从少年到成年、从被人照顾到开始照顾自己的距离。</span>
+          <span class="tile-date">2026 年 9 月 30 日</span>
           <span class="tags"><span class="tag">散文</span><span class="tag">故乡</span><span class="tag">亲情</span><span class="tag">成长</span><span class="tag">回望</span></span>
         </span>
       </a>

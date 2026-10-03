@@ -1,15 +1,20 @@
 # =====================================================================
 #  build.ps1 - static blog generator (no dependencies)
 #
-#  Usage:   pwsh -File .\build.ps1
-#           (or right-click -> Run with PowerShell)
+#  Usage:   powershell -ExecutionPolicy Bypass -File .\build.ps1
+#           (or double-click build.cmd)
 #
 #  Reads:   site.json
 #           _templates\*.html        (page templates + navbar/footer partials)
 #           about\index.md           (about page source)
 #           blog\<slug>\index.md     (one folder per post)
+#           assets\cover.jpg         (optional home hero cover)
 #  Writes:  index.html, blog\index.html, blog\<slug>\index.html,
-#           about\index.html, .nojekyll
+#           category\<name>\index.html, about\index.html, .nojekyll
+#
+#  NOTE: keep this file pure ASCII (PowerShell 5.1 reads non-BOM files as
+#        ANSI, which would corrupt any Chinese literal written here).
+#        All Chinese text lives in the templates and the markdown files.
 # =====================================================================
 
 $ErrorActionPreference = 'Stop'
@@ -108,14 +113,25 @@ function Get-Post([string]$MdPath, [string]$Slug) {
     if ($bodyStart -lt $lines.Count) {
         $body = ($lines[$bodyStart..($lines.Count - 1)]) -join "`n"
     }
+
+    $title = $Slug
+    if ($meta['title']) { $title = $meta['title'] }
+    # card thumbnail glyph: optional 'glyph:' field, otherwise first character
+    $glyph = '.'
+    if ($title.Length -gt 0) { $glyph = $title.Substring(0, 1) }
+    if ($meta['glyph']) { $glyph = $meta['glyph'] }
+
     return [pscustomobject]@{
         Slug        = $Slug
         Meta        = $meta
         Body        = $body
         Content     = Convert-Markdown $body
-        Title       = if ($meta['title']) { $meta['title'] } else { $Slug }
+        Title       = $title
+        Glyph       = $glyph
         Subtitle    = if ($meta['subtitle']) { $meta['subtitle'] } else { '' }
         Author      = if ($meta['author']) { $meta['author'] } else { '' }
+        AuthorBio   = if ($meta['author_bio']) { $meta['author_bio'] } else { '' }
+        Category    = if ($meta['category']) { $meta['category'] } else { '' }
         Date        = if ($meta['date']) { $meta['date'] } else { '' }
         DisplayDate = if ($meta['display_date']) { $meta['display_date'] } else { $meta['date'] }
         Excerpt     = if ($meta['excerpt']) { $meta['excerpt'] } else { '' }
@@ -140,6 +156,7 @@ function New-TagHtml($Tags) {
     return $sb.ToString()
 }
 
+# --- giscus comments (rendered only when both ids are configured) -----
 function Get-CommentsHtml($g, [string]$Tpl) {
     if ($null -eq $g) { return '' }
     if (-not $g.enabled) { return '' }
@@ -163,18 +180,19 @@ function New-PostListHtml($Posts, [string]$RootPrefix) {
     $i = 0
     foreach ($p in $Posts) {
         $hue = (200 + ($i * 47)) % 360
-        $glyph = '.'
-        if ($p.Title.Length -gt 0) { $glyph = $p.Title.Substring(0, 1) }
         $url = $RootPrefix + 'blog/' + $p.Slug + '/index.html'
         [void]$sb.AppendLine('    <li class="tile reveal" style="--h:' + $hue + '">')
         [void]$sb.AppendLine('      <a class="tile-link" href="' + $url + '">')
-        [void]$sb.AppendLine('        <span class="tile-thumb"><span class="tile-glyph">' + (Esc $glyph) + '</span></span>')
+        [void]$sb.AppendLine('        <span class="tile-thumb"><span class="tile-glyph">' + (Esc $p.Glyph) + '</span><span class="play-btn" aria-hidden="true">&#9654;</span></span>')
         [void]$sb.AppendLine('        <span class="tile-body">')
-        [void]$sb.AppendLine('          <span class="tile-date">' + (Esc $p.DisplayDate) + '</span>')
+        if ($p.Category) {
+            [void]$sb.AppendLine('          <span class="cat-pill">' + (Esc $p.Category) + '</span>')
+        }
         [void]$sb.AppendLine('          <span class="tile-title">' + (Esc $p.Title) + '</span>')
         if ($p.Excerpt) {
             [void]$sb.AppendLine('          <span class="tile-excerpt">' + (Esc $p.Excerpt) + '</span>')
         }
+        [void]$sb.AppendLine('          <span class="tile-date">' + (Esc $p.DisplayDate) + '</span>')
         if ($p.Tags.Count -gt 0) {
             [void]$sb.AppendLine('          <span class="tags">' + (New-TagHtml $p.Tags) + '</span>')
         }
@@ -182,6 +200,17 @@ function New-PostListHtml($Posts, [string]$RootPrefix) {
         [void]$sb.AppendLine('      </a>')
         [void]$sb.AppendLine('    </li>')
         $i++
+    }
+    return $sb.ToString().TrimEnd()
+}
+
+# --- sidebar navigation: one extra entry per category -----------------
+function New-NavCategories($Cats, [string]$ActiveCat, [string]$RootPrefix) {
+    $sb = New-Object System.Text.StringBuilder
+    foreach ($c in $Cats) {
+        $cls = 'nav-item'
+        if ($ActiveCat -and $ActiveCat -eq $c) { $cls = 'nav-item active' }
+        [void]$sb.AppendLine('    <a class="' + $cls + '" href="' + $RootPrefix + 'category/' + $c + '/index.html">' + (Esc $c) + '</a>')
     }
     return $sb.ToString().TrimEnd()
 }
@@ -196,6 +225,7 @@ $postTpl = Read-Text (Join-Path $Root '_templates\post.html')
 $homeTpl = Read-Text (Join-Path $Root '_templates\home.html')
 $listTpl = Read-Text (Join-Path $Root '_templates\list.html')
 $pageTpl = Read-Text (Join-Path $Root '_templates\page.html')
+$catTpl = Read-Text (Join-Path $Root '_templates\category.html')
 $commentsTpl = Read-Text (Join-Path $Root '_templates\_comments.html')
 
 # giscus comment config (optional file; comments only render when both IDs are set)
@@ -208,23 +238,29 @@ $year = (Get-Date).Year
 
 # --- collect posts ---------------------------------------------------
 $posts = @()
-$postDirs = Get-ChildItem -Path (Join-Path $Root 'blog') -Directory -ErrorAction SilentlyContinue
+$postDirs = Get-ChildItem -Path (Join-Path $Root 'blog') -Directory -ErrorAction SilentlyContinue |
+    Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName 'index.md') }
 foreach ($dir in $postDirs) {
-    $md = Join-Path $dir.FullName 'index.md'
-    if (Test-Path -LiteralPath $md) {
-        $posts += Get-Post $md $dir.Name
-    }
+    $posts += Get-Post (Join-Path $dir.FullName 'index.md') $dir.Name
 }
 $posts = @($posts | Sort-Object -Property Date -Descending)
 
-function Get-Chrome([string]$RootPrefix, [string]$Active, [string]$Citation) {
+# --- categories (derived from front matter 'category:') ---------------
+$categories = @($posts | Where-Object { $_.Category } | ForEach-Object { $_.Category } | Select-Object -Unique)
+if ($categories.Count -gt 0) { Write-Host ('  cats   -> ' + ($categories -join ', ')) }
+
+function Get-Chrome([string]$RootPrefix, [string]$Active, [string]$Citation, [string]$ActiveCategory = '') {
     $nav = Apply-Tokens $navbarTpl @{
-        'ROOT'         = $RootPrefix
-        'SITE_TITLE'   = $site.site_title
-        'REPO'         = $repo
-        'ACTIVE_HOME'  = $(if ($Active -eq 'home') { ' class="active"' } else { '' })
-        'ACTIVE_BLOG'  = $(if ($Active -eq 'blog') { ' class="active"' } else { '' })
-        'ACTIVE_ABOUT' = $(if ($Active -eq 'about') { ' class="active"' } else { '' })
+        'ROOT'           = $RootPrefix
+        'SITE_TITLE'     = $site.site_title
+        'SITE_DESC'      = $site.site_desc
+        'AUTHOR'         = $site.author
+        'YEAR'           = $year
+        'REPO'           = $repo
+        'ACTIVE_HOME'    = $(if ($Active -eq 'home') { ' active' } else { '' })
+        'ACTIVE_BLOG'    = $(if ($Active -eq 'blog') { ' active' } else { '' })
+        'ACTIVE_ABOUT'   = $(if ($Active -eq 'about') { ' active' } else { '' })
+        'NAV_CATEGORIES' = New-NavCategories $categories $ActiveCategory $RootPrefix
     }
     $foot = Apply-Tokens $footerTpl @{
         'ROOT'           = $RootPrefix
@@ -250,29 +286,44 @@ foreach ($p in $posts) {
 }</pre>
 "@
     $bib = $bib.Trim()
+
+    $catPill = ''
+    if ($p.Category) {
+        $catPill = '<a class="cat-pill" href="../../category/' + $p.Category + '/index.html">' + (Esc $p.Category) + '</a>'
+    }
+
+    $authorCard = ''
+    if ($p.AuthorBio) {
+        $initial = '.'
+        if ($p.Author.Length -gt 0) { $initial = $p.Author.Substring(0, 1) }
+        $authorCard = '<div class="author-card"><span class="author-avatar">' + (Esc $initial) + '</span>' +
+            '<span class="author-meta"><strong>' + (Esc $p.Author) + '</strong><span>' + (Esc $p.AuthorBio) + '</span></span></div>'
+    }
+
     $chrome = Get-Chrome '../../' 'blog' $bib
     $html = Apply-Tokens $postTpl @{
-        'NAVBAR'       = $chrome.Nav
-        'FOOTER'       = $chrome.Foot
-        'ROOT'         = '../../'
-        'SITE_TITLE'   = $site.site_title
-        'SITE_DESC'    = $site.site_desc
-        'REPO'         = $repo
-        'TITLE'        = Esc $p.Title
-        'SUBTITLE'     = Esc $p.Subtitle
-        'AUTHOR'       = Esc $p.Author
-        'DISPLAY_DATE' = Esc $p.DisplayDate
-        'EXCERPT'      = Esc $p.Excerpt
-        'TAGS_HTML'    = New-TagHtml $p.Tags
-        'TAG_COUNT'    = $p.Tags.Count
-        'CONTENT'      = $p.Content
-        'DATELINE'     = Esc $p.Dateline
-        'SLUG'         = $p.Slug
-        'YEAR'         = $year
-        'COMMENTS'     = Get-CommentsHtml $giscus $commentsTpl
+        'NAVBAR'        = $chrome.Nav
+        'FOOTER'        = $chrome.Foot
+        'ROOT'          = '../../'
+        'SITE_TITLE'    = $site.site_title
+        'SITE_DESC'     = $site.site_desc
+        'REPO'          = $repo
+        'TITLE'         = Esc $p.Title
+        'SUBTITLE'      = Esc $p.Subtitle
+        'AUTHOR'        = Esc $p.Author
+        'DISPLAY_DATE'  = Esc $p.DisplayDate
+        'EXCERPT'       = Esc $p.Excerpt
+        'TAGS_HTML'     = New-TagHtml $p.Tags
+        'TAG_COUNT'     = $p.Tags.Count
+        'CONTENT'       = $p.Content
+        'DATELINE'      = Esc $p.Dateline
+        'SLUG'          = $p.Slug
+        'YEAR'          = $year
+        'CATEGORY_PILL' = $catPill
+        'AUTHOR_CARD'   = $authorCard
+        'COMMENTS'      = Get-CommentsHtml $giscus $commentsTpl
     }
-    $out = Join-Path $Root ("blog\{0}\index.html" -f $p.Slug)
-    Write-Text $out $html
+    Write-Text (Join-Path $Root ("blog\{0}\index.html" -f $p.Slug)) $html
     Write-Host ("  post   -> blog/{0}/index.html" -f $p.Slug)
 }
 
@@ -328,6 +379,28 @@ $list = Apply-Tokens $listTpl @{
 Write-Text (Join-Path $Root 'blog\index.html') $list
 Write-Host '  page   -> blog/index.html'
 
+# --- category pages --------------------------------------------------
+foreach ($cat in $categories) {
+    $catPosts = @($posts | Where-Object { $_.Category -eq $cat })
+    $chrome = Get-Chrome '../../' '' '' $cat
+    $html = Apply-Tokens $catTpl @{
+        'NAVBAR'        = $chrome.Nav
+        'FOOTER'        = $chrome.Foot
+        'ROOT'          = '../../'
+        'SITE_TITLE'    = $site.site_title
+        'SITE_DESC'     = $site.site_desc
+        'AUTHOR'        = $site.author
+        'REPO'          = $repo
+        'YEAR'          = $year
+        'CATEGORY_NAME' = Esc $cat
+        'CATEGORY_NOTE' = ''
+        'POST_COUNT'    = $catPosts.Count
+        'POSTS_HTML'    = New-PostListHtml $catPosts '../../'
+    }
+    Write-Text (Join-Path $Root ("category\{0}\index.html" -f $cat)) $html
+    Write-Host ("  cat    -> category/{0}/index.html ({1} post)" -f $cat, $catPosts.Count)
+}
+
 # --- about page ------------------------------------------------------
 $aboutMd = Join-Path $Root 'about\index.md'
 if (Test-Path -LiteralPath $aboutMd) {
@@ -358,4 +431,4 @@ if (-not (Test-Path -LiteralPath $nojekyll)) {
 }
 
 Write-Host ''
-Write-Host ("Done. {0} post(s) built." -f $posts.Count)
+Write-Host ("Done. {0} post(s), {1} categor(ies) built." -f $posts.Count, $categories.Count)
