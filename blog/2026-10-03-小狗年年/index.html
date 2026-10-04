@@ -7,10 +7,11 @@
 <meta name="description" content="每个人都有自己的心爱之物，像琦君笔下飘香的桂花，冯骥才笔下灵动的珍珠鸟，我也有我的心爱之物——一只调皮可爱的小狗。">
 <meta name="author" content="徐汝婷">
 <meta name="theme-color" content="#000000">
+<link rel="alternate" type="application/rss+xml" title="guardcurry blog" href="../../feed.xml">
 <link rel="stylesheet" href="../../assets/style.css">
 </head>
 <body>
-<script>document.documentElement.classList.add("js");</script>
+<script>document.documentElement.classList.add("js");try{var f=localStorage.getItem("gcb-font");if(f){document.documentElement.setAttribute("data-font",f);}}catch(e){}</script>
 
 <aside class="sidebar">
   <a class="brand" href="../../index.html">guardcurry blog</a>
@@ -19,6 +20,8 @@
     <a class="nav-item" href="../../index.html">首页</a>
     <a class="nav-item active" href="../../blog/index.html">博客</a>
     <a class="nav-item" href="../../category/儿童作文/index.html">儿童作文</a>
+    <a class="nav-item" href="../../music/index.html">GC-music&amp;life</a>
+    <a class="nav-item" href="../../search/index.html">搜索</a>
     <a class="nav-item" href="../../about/index.html">关于</a>
   </nav>
 
@@ -27,7 +30,7 @@
   <div class="sidebar-foot">
     <p class="sidebar-title">关于本站</p>
     <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
-    <p class="sidebar-copy">© 2026 徐奥</p>
+    <p class="sidebar-copy">© 2026 徐奥 · <a href="../../feed.xml">RSS 订阅</a></p>
   </div>
 </aside>
 
@@ -44,6 +47,19 @@
           <span><span class="meta-label">阅读</span><span id="reading-time">—</span></span>
         </div>
         <div class="tags"><span class="tag">儿童作文</span><span class="tag">我的心爱之物</span><span class="tag">小狗</span></div>
+        <div class="post-tools">
+          <button id="read-btn" class="tool-btn read-btn" type="button" hidden>
+            <span class="read-icon">▶</span><span class="read-label">朗读全文</span>
+          </button>
+          <button id="read-stop" class="tool-btn tool-icon" type="button" hidden aria-label="停止朗读">■</button>
+          <span id="read-bars" class="read-bars" hidden aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+          <span id="read-pos" class="read-pos" hidden></span>
+          <span class="font-ctrl" role="group" aria-label="正文字号">
+            <button type="button" data-size="s">A-</button>
+            <button type="button" data-size="m">标准</button>
+            <button type="button" data-size="l">A+</button>
+          </span>
+        </div>
       </header>
       <div class="author-card"><span class="author-avatar">徐</span><span class="author-meta"><strong>徐汝婷</strong><span>五年级学生，站主的妹妹，喜欢卡皮巴拉。</span></span></div>
       <div class="post-body glass reveal" data-delay="80">

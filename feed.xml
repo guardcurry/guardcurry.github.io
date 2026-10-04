@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>guardcurry blog</title>
+  <link>https://guardcurry.github.io/</link>
+  <description>写一点文字，记一些事。这里存放我的散文与随笔。</description>
+  <language>zh-CN</language>
+  <atom:link href="https://guardcurry.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>小狗“年年”</title>
+    <link>https://guardcurry.github.io/blog/2026-10-03-小狗年年/</link>
+    <guid isPermaLink="true">https://guardcurry.github.io/blog/2026-10-03-小狗年年/</guid>
+    <pubDate>Sat, 03 Oct 2026 00:00:00 +0800</pubDate>
+    <description>每个人都有自己的心爱之物，像琦君笔下飘香的桂花，冯骥才笔下灵动的珍珠鸟，我也有我的心爱之物——一只调皮可爱的小狗。</description>
+    <category>儿童作文</category>
+  </item>
+  <item>
+    <title>钥匙</title>
+    <link>https://guardcurry.github.io/blog/2026-09-30-钥匙/</link>
+    <guid isPermaLink="true">https://guardcurry.github.io/blog/2026-09-30-钥匙/</guid>
+    <pubDate>Wed, 30 Sep 2026 00:00:00 +0800</pubDate>
+    <description>从藏钥匙，到带钥匙；从带一把钥匙，到带一串钥匙。这中间隔着的，不只是从乡村到城市的距离，也是从少年到成年、从被人照顾到开始照顾自己的距离。</description>
+  </item>
+</channel>
+</rss>

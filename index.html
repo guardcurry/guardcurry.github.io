@@ -6,11 +6,12 @@
 <title>guardcurry blog</title>
 <meta name="description" content="写一点文字，记一些事。这里存放我的散文与随笔。">
 <meta name="author" content="徐奥">
-<meta name="theme-color" content="#08090c">
+<meta name="theme-color" content="#000000">
+<link rel="alternate" type="application/rss+xml" title="guardcurry blog" href="feed.xml">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<script>document.documentElement.classList.add("js");</script>
+<script>document.documentElement.classList.add("js");try{var f=localStorage.getItem("gcb-font");if(f){document.documentElement.setAttribute("data-font",f);}}catch(e){}</script>
 
 <aside class="sidebar">
   <a class="brand" href="index.html">guardcurry blog</a>
@@ -19,6 +20,8 @@
     <a class="nav-item active" href="index.html">首页</a>
     <a class="nav-item" href="blog/index.html">博客</a>
     <a class="nav-item" href="category/儿童作文/index.html">儿童作文</a>
+    <a class="nav-item" href="music/index.html">GC-music&amp;life</a>
+    <a class="nav-item" href="search/index.html">搜索</a>
     <a class="nav-item" href="about/index.html">关于</a>
   </nav>
 
@@ -27,7 +30,7 @@
   <div class="sidebar-foot">
     <p class="sidebar-title">关于本站</p>
     <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
-    <p class="sidebar-copy">© 2026 徐奥</p>
+    <p class="sidebar-copy">© 2026 徐奥 · <a href="feed.xml">RSS 订阅</a></p>
   </div>
 </aside>
 
@@ -38,9 +41,12 @@
     <p>写一点文字，记一些事。这里存放我的散文与随笔。</p>
     <div class="hero-links">
       <a class="pill-link" href="blog/index.html">全部文章</a>
+      <a class="pill-link" href="search/index.html">搜索</a>
       <a class="pill-link" href="about/index.html">关于我</a>
     </div>
   </section>
+
+  <div id="resume-slot"></div>
 
   <h2 class="section-title">最新文章</h2>
   <ul class="post-list">
